@@ -12,7 +12,8 @@ export default defineConfig({
     allowedHosts: [
       'custody-schedule.replit.app',
       '.replit.app',
-      '.repl.co'
+      '.repl.co',
+      '.replit.dev'
     ],
     proxy: {
       '/api': {
@@ -27,7 +28,8 @@ export default defineConfig({
     allowedHosts: [
       'custody-schedule.replit.app',
       '.replit.app',
-      '.repl.co'
+      '.repl.co',
+      '.replit.dev'
     ]
   }
 })
