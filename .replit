@@ -1,5 +1,5 @@
-run = "npm run dev"
-entrypoint = "index.html"
+run = "npm start"
+entrypoint = "server.js"
 
 [nix]
 channel = "stable-23_11"

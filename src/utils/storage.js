@@ -1,89 +1,81 @@
-// Storage utilities using Replit Database (with fallback to localStorage)
+// Storage utilities using backend API (with Replit Database)
 
-let db = null;
-
-// Try to initialize Replit Database, fallback to localStorage
-try {
-  if (typeof window === 'undefined') {
-    // Server-side: use actual Replit Database
-    const Database = require('@replit/database');
-    db = new Database();
-  }
-} catch (e) {
-  console.log('Replit Database not available, using localStorage');
-}
-
-// Fallback storage using localStorage
-const localStorageDB = {
-  async get(key) {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : undefined;
-  },
-  async set(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  },
-  async list(prefix = '') {
-    const keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(prefix)) {
-        keys.push(key);
-      }
-    }
-    return keys;
-  },
-  async delete(key) {
-    localStorage.removeItem(key);
-  }
-};
-
-const storage = db || localStorageDB;
+const API_URL = import.meta.env.PROD 
+  ? '/api'  // Production: same origin
+  : 'http://localhost:3000/api';  // Development: backend server
 
 // Save a proposal with timestamp
 export async function saveProposal(mode, assignments) {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-  const key = `${mode}-${timestamp}`;
-  
-  const proposal = {
-    year: 2026,
-    assignments,
-    savedAt: new Date().toISOString()
-  };
-  
-  await storage.set(key, proposal);
-  return key;
+  try {
+    const response = await fetch(`${API_URL}/proposals/${mode}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ assignments })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.key;
+  } catch (error) {
+    console.error('Error saving proposal:', error);
+    throw error;
+  }
 }
 
 // Get all proposals for a specific mode (mom or dad)
 export async function getProposals(mode) {
-  const prefix = `${mode}-`;
-  const keys = await storage.list(prefix);
-  
-  // Get all proposals
-  const proposals = await Promise.all(
-    keys.map(async (key) => {
-      const data = await storage.get(key);
-      return {
-        key,
-        ...data
-      };
-    })
-  );
-  
-  // Sort by savedAt descending (newest first)
-  return proposals.sort((a, b) => 
-    new Date(b.savedAt) - new Date(a.savedAt)
-  );
+  try {
+    const response = await fetch(`${API_URL}/proposals/${mode}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting proposals:', error);
+    return []; // Return empty array on error
+  }
 }
 
 // Get a specific proposal
 export async function getProposal(key) {
-  return await storage.get(key);
+  try {
+    const response = await fetch(`${API_URL}/proposal/${key}`);
+    
+    if (!response.ok) {
+      if (response.status === 404) return null;
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting proposal:', error);
+    return null;
+  }
 }
 
 // Delete a proposal
 export async function deleteProposal(key) {
-  await storage.delete(key);
+  try {
+    const response = await fetch(`${API_URL}/proposal/${key}`, {
+      method: 'DELETE'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error deleting proposal:', error);
+    throw error;
+  }
 }
 
 // Format timestamp for display
@@ -98,4 +90,3 @@ export function formatTimestamp(isoString) {
     hour12: true
   });
 }
-
