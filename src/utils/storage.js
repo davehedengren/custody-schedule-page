@@ -1,8 +1,7 @@
 // Storage utilities using backend API (with Replit Database)
 
-const API_URL = import.meta.env.PROD 
-  ? '/api'  // Production: same origin
-  : 'http://localhost:3000/api';  // Development: backend server
+// In production and on Replit, use relative path. In local dev, use localhost
+const API_URL = '/api';
 
 // Save a proposal with timestamp
 export async function saveProposal(mode, assignments) {

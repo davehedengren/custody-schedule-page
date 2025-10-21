@@ -1,8 +1,9 @@
 // Simple Express server to handle Replit Database operations
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Initialize Replit Database
 let db;
@@ -27,6 +28,13 @@ try {
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from dist folder in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+}
+
+// API Routes
 
 // Get all proposals for a mode (mom or dad)
 app.get('/api/proposals/:mode', async (req, res) => {
@@ -104,7 +112,16 @@ app.delete('/api/proposal/:key', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`🚀 API server running on port ${port}`);
-});
+// Serve index.html for all other routes (SPA fallback) in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+}
 
+app.listen(port, '0.0.0.0', () => {
+  console.log(`🚀 API server running on port ${port}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`📦 Serving static files from dist/`);
+  }
+});
