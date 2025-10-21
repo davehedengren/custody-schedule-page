@@ -1,14 +1,20 @@
 // Simple Express server to handle Replit Database operations
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Initialize Replit Database
 let db;
 try {
-  const Database = require('@replit/database');
+  const { default: Database } = await import('@replit/database');
   db = new Database();
   console.log('✅ Replit Database connected');
 } catch (e) {
