@@ -2,6 +2,8 @@
 
 A React-based web application for creating and managing custody proposals with a visual calendar interface and persistent storage.
 
+🔗 **Repository**: https://github.com/davehedengren/custody-schedule-page
+
 ## Features
 
 - **Password-Protected Modes**: Enter "mom" or "dad" to access respective proposal modes
