@@ -9,6 +9,11 @@ export default defineConfig({
     hmr: {
       clientPort: 443
     },
+    allowedHosts: [
+      'custody-schedule.replit.app',
+      '.replit.app',
+      '.repl.co'
+    ],
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
@@ -18,7 +23,12 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0',
-    port: 5173
+    port: 5173,
+    allowedHosts: [
+      'custody-schedule.replit.app',
+      '.replit.app',
+      '.repl.co'
+    ]
   }
 })
 
