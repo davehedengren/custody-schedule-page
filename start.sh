@@ -8,5 +8,5 @@ node server.js &
 sleep 2
 
 # Start Vite frontend
-vite
+npx vite
 
