@@ -10,6 +10,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Initialize Replit Database
 let db;
@@ -36,7 +37,8 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from dist folder in production
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
+  console.log('📦 Production mode: serving static files from dist/');
   app.use(express.static(path.join(__dirname, 'dist')));
 }
 
@@ -119,9 +121,11 @@ app.delete('/api/proposal/:key', async (req, res) => {
 });
 
 // Serve index.html for all other routes (SPA fallback) in production
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    const indexPath = path.join(__dirname, 'dist', 'index.html');
+    console.log('Serving index.html from:', indexPath);
+    res.sendFile(indexPath);
   });
 } else {
   // In development, redirect to Vite dev server
@@ -142,8 +146,9 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 API server running on port ${port}`);
-  if (process.env.NODE_ENV === 'production') {
-    console.log(`📦 Serving static files from dist/`);
+  console.log(`🌍 Environment: ${isProduction ? 'production' : 'development'}`);
+  if (isProduction) {
+    console.log(`📦 Serving static files from: ${path.join(__dirname, 'dist')}`);
   } else {
     console.log(`📱 React app running on http://localhost:5173`);
   }

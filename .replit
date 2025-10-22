@@ -6,10 +6,10 @@ channel = "stable-23_11"
 
 [deployment]
 build = ["sh", "-c", "npm run build"]
-run = ["sh", "-c", "node server.js"]
+run = ["sh", "-c", "NODE_ENV=production PORT=3000 node server.js"]
 deploymentTarget = "cloudrun"
 
 [[ports]]
-localPort = 5173
+localPort = 3000
 externalPort = 80
 
