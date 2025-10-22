@@ -123,11 +123,28 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });
+} else {
+  // In development, redirect to Vite dev server
+  app.get('/', (req, res) => {
+    res.send(`
+      <html>
+        <head><title>Custody Calendar - Dev Mode</title></head>
+        <body style="font-family: sans-serif; padding: 40px; text-align: center;">
+          <h1>Development Server Running</h1>
+          <p>The React app is running on the Vite dev server.</p>
+          <p><a href="http://localhost:5173" style="font-size: 18px; color: #2196F3;">Click here to open the app →</a></p>
+          <p style="margin-top: 40px; color: #666;">API server is running on port ${port}</p>
+        </body>
+      </html>
+    `);
+  });
 }
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 API server running on port ${port}`);
   if (process.env.NODE_ENV === 'production') {
     console.log(`📦 Serving static files from dist/`);
+  } else {
+    console.log(`📱 React app running on http://localhost:5173`);
   }
 });
