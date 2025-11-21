@@ -7,6 +7,7 @@ import FileControls from './components/FileControls';
 import AuthModal from './components/AuthModal';
 import ModeToggle from './components/ModeToggle';
 import HamburgerMenu from './components/HamburgerMenu';
+import Instructions from './components/Instructions';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,6 +15,7 @@ function App() {
   const [assignments, setAssignments] = useState({});
   const [selectedTool, setSelectedTool] = useState('mom');
   const [comparisonMode, setComparisonMode] = useState(false);
+  const [currentView, setCurrentView] = useState('calendar'); // 'calendar' or 'instructions'
 
   const handleAuthenticate = (mode) => {
     setCurrentMode(mode);
@@ -92,6 +94,14 @@ function App() {
     return <AuthModal onAuthenticate={handleAuthenticate} />;
   }
 
+  if (currentView === 'instructions') {
+    return (
+      <div className="app">
+        <Instructions onBack={() => setCurrentView('calendar')} />
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <HolidaySidebar />
@@ -100,7 +110,15 @@ function App() {
       <div className="main-content">
         <header className="app-header">
           <h1>Custody Calendar 2026</h1>
-          <ModeToggle currentMode={currentMode} onToggle={handleToggleMode} />
+          <div className="header-controls">
+            <button 
+              className="instructions-btn" 
+              onClick={() => setCurrentView('instructions')}
+            >
+              Instructions
+            </button>
+            <ModeToggle currentMode={currentMode} onToggle={handleToggleMode} />
+          </div>
         </header>
 
         <div className="controls-section">

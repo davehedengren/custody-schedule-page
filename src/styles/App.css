@@ -231,6 +231,30 @@ body {
   margin: 0;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.instructions-btn {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.instructions-btn:hover {
+  background-color: #2980b9;
+}
+
 /* Mode Toggle */
 .mode-toggle {
   display: flex;
@@ -796,6 +820,99 @@ body {
   font-size: 10px;
 }
 
+/* Holiday borders */
+.day-cell.summer-holiday {
+  border: 3px solid gold;
+  box-sizing: border-box;
+}
+
+.day-cell.non-summer-holiday {
+  border: 3px solid #dc3545;
+  box-sizing: border-box;
+}
+
+/* Instructions Page */
+.instructions-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.instructions-content {
+  max-width: 900px;
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.instructions-content h1 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.instructions-link {
+  background-color: #e3f2fd;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.instructions-link a {
+  color: #2196F3;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.instructions-link a:hover {
+  text-decoration: underline;
+}
+
+.instructions-section {
+  margin-bottom: 30px;
+}
+
+.instructions-section h2 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.instructions-section p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.back-to-calendar-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.back-to-calendar-btn:hover {
+  background-color: #45a049;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .main-content {
@@ -812,6 +929,18 @@ body {
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .instructions-content {
+    padding: 20px;
+  }
+
+  .instructions-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .instructions-section h2 {
+    font-size: 1.4rem;
   }
 }
 

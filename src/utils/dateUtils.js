@@ -66,6 +66,16 @@ export function isHoliday(dateStr) {
   });
 }
 
+// Check if a date is a summer holiday (May 22 - Aug 19)
+export function isSummerHoliday(dateStr) {
+  return dateStr >= '2026-05-22' && dateStr <= '2026-08-19';
+}
+
+// Check if a date is a non-summer holiday (all other holidays)
+export function isNonSummerHoliday(dateStr) {
+  return isHoliday(dateStr) && !isSummerHoliday(dateStr);
+}
+
 // Check if a date is a weekend (Saturday or Sunday)
 export function isWeekend(year, month, day) {
   const date = new Date(year, month, day);
@@ -112,7 +122,8 @@ export function getTotalCounts() {
   const totals = {
     schoolDays: 0,
     weekends: 0,
-    holidays: 0
+    summerHolidays: 0,
+    nonSummerHolidays: 0
   };
 
   // Iterate through all days of 2026
@@ -129,8 +140,12 @@ export function getTotalCounts() {
         totals.weekends++;
       }
       
-      if (isHoliday(dateStr)) {
-        totals.holidays++;
+      if (isSummerHoliday(dateStr)) {
+        totals.summerHolidays++;
+      }
+      
+      if (isNonSummerHoliday(dateStr)) {
+        totals.nonSummerHolidays++;
       }
     }
   }
@@ -141,8 +156,8 @@ export function getTotalCounts() {
 // Calculate statistics for assignments
 export function calculateStatistics(assignments) {
   const stats = {
-    mom: { total: 0, schoolDays: 0, weekends: 0, holidays: 0 },
-    dad: { total: 0, schoolDays: 0, weekends: 0, holidays: 0 },
+    mom: { total: 0, schoolDays: 0, weekends: 0, summerHolidays: 0, nonSummerHolidays: 0 },
+    dad: { total: 0, schoolDays: 0, weekends: 0, summerHolidays: 0, nonSummerHolidays: 0 },
     disputed: 0
   };
 
@@ -166,8 +181,12 @@ export function calculateStatistics(assignments) {
       stats[parent].weekends++;
     }
 
-    if (isHoliday(dateStr)) {
-      stats[parent].holidays++;
+    if (isSummerHoliday(dateStr)) {
+      stats[parent].summerHolidays++;
+    }
+
+    if (isNonSummerHoliday(dateStr)) {
+      stats[parent].nonSummerHolidays++;
     }
   });
 

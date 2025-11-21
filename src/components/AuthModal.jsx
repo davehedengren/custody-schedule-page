@@ -8,11 +8,14 @@ export default function AuthModal({ onAuthenticate }) {
     e.preventDefault();
     const lowerPassword = password.toLowerCase();
     
-    if (lowerPassword === 'mom' || lowerPassword === 'dad') {
-      onAuthenticate(lowerPassword);
+    if (lowerPassword === 'jessica') {
+      onAuthenticate('mom');
+      setError('');
+    } else if (lowerPassword === 'bryson') {
+      onAuthenticate('dad');
       setError('');
     } else {
-      setError('Invalid password. Please enter "mom" or "dad".');
+      setError('Invalid password. Please try again.');
       setPassword('');
     }
   };
@@ -28,7 +31,7 @@ export default function AuthModal({ onAuthenticate }) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password (mom or dad)"
+            placeholder="Enter your password"
             className="auth-input"
             autoFocus
           />
@@ -39,10 +42,6 @@ export default function AuthModal({ onAuthenticate }) {
             Enter
           </button>
         </form>
-        
-        <div className="auth-hint">
-          Hint: Password is either "mom" or "dad"
-        </div>
       </div>
     </div>
   );

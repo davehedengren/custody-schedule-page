@@ -5,7 +5,9 @@ import {
   DAY_NAMES, 
   getDaysInMonth, 
   getFirstDayOfMonth,
-  formatDate 
+  formatDate,
+  isSummerHoliday,
+  isNonSummerHoliday
 } from '../utils/dateUtils';
 
 function MonthCalendar({ month, assignments, onDayClick, comparisonMode }) {
@@ -31,6 +33,13 @@ function MonthCalendar({ month, assignments, onDayClick, comparisonMode }) {
       className += ' dad-day';
     } else if (assignment === 'disputed') {
       className += ' disputed-day';
+    }
+    
+    // Add holiday border classes
+    if (isSummerHoliday(dateStr)) {
+      className += ' summer-holiday';
+    } else if (isNonSummerHoliday(dateStr)) {
+      className += ' non-summer-holiday';
     }
     
     days.push(
