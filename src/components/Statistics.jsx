@@ -23,11 +23,18 @@ export default function Statistics({ assignments, comparisonMode }) {
     ? Math.round((stats.dad.weekends / totals.weekends) * 100) 
     : 0;
   
-  const momHolidayPercent = totals.holidays > 0 
-    ? Math.round((stats.mom.holidays / totals.holidays) * 100) 
+  const momSummerHolidayPercent = totals.summerHolidays > 0 
+    ? Math.round((stats.mom.summerHolidays / totals.summerHolidays) * 100) 
     : 0;
-  const dadHolidayPercent = totals.holidays > 0 
-    ? Math.round((stats.dad.holidays / totals.holidays) * 100) 
+  const dadSummerHolidayPercent = totals.summerHolidays > 0 
+    ? Math.round((stats.dad.summerHolidays / totals.summerHolidays) * 100) 
+    : 0;
+  
+  const momNonSummerHolidayPercent = totals.nonSummerHolidays > 0 
+    ? Math.round((stats.mom.nonSummerHolidays / totals.nonSummerHolidays) * 100) 
+    : 0;
+  const dadNonSummerHolidayPercent = totals.nonSummerHolidays > 0 
+    ? Math.round((stats.dad.nonSummerHolidays / totals.nonSummerHolidays) * 100) 
     : 0;
 
   return (
@@ -50,8 +57,12 @@ export default function Statistics({ assignments, comparisonMode }) {
             <span className="stat-value">{stats.mom.weekends} <span className="stat-percent">({momWeekendPercent}%)</span></span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">Holidays:</span>
-            <span className="stat-value">{stats.mom.holidays} <span className="stat-percent">({momHolidayPercent}%)</span></span>
+            <span className="stat-label">Summer Holidays:</span>
+            <span className="stat-value">{stats.mom.summerHolidays} <span className="stat-percent">({momSummerHolidayPercent}%)</span></span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">School Break Days:</span>
+            <span className="stat-value">{stats.mom.nonSummerHolidays} <span className="stat-percent">({momNonSummerHolidayPercent}%)</span></span>
           </div>
         </div>
 
@@ -70,8 +81,12 @@ export default function Statistics({ assignments, comparisonMode }) {
             <span className="stat-value">{stats.dad.weekends} <span className="stat-percent">({dadWeekendPercent}%)</span></span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">Holidays:</span>
-            <span className="stat-value">{stats.dad.holidays} <span className="stat-percent">({dadHolidayPercent}%)</span></span>
+            <span className="stat-label">Summer Holidays:</span>
+            <span className="stat-value">{stats.dad.summerHolidays} <span className="stat-percent">({dadSummerHolidayPercent}%)</span></span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">School Break Days:</span>
+            <span className="stat-value">{stats.dad.nonSummerHolidays} <span className="stat-percent">({dadNonSummerHolidayPercent}%)</span></span>
           </div>
         </div>
       </div>
@@ -82,6 +97,7 @@ export default function Statistics({ assignments, comparisonMode }) {
             <span className="stat-label">Disputed Days:</span>
             <span className="stat-value disputed-value">{stats.disputed}</span>
           </div>
+          <p className="disputed-hint">Gradient shows direction: bottom = Mom's proposal, top = Dad's proposal</p>
         </div>
       )}
     </div>

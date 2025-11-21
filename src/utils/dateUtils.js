@@ -20,12 +20,8 @@ export const HOLIDAYS = [
   { start: '2026-03-16', end: '2026-03-17', name: 'No School' },
   // Spring Break (Apr 6-10)
   { start: '2026-04-06', end: '2026-04-10', name: 'Spring Break' },
-  // Last Day of School (May 22)
-  { start: '2026-05-22', end: '2026-05-22', name: 'Last Day of School' },
-  // Summer Vacation (May 22 - Aug 19)
-  { start: '2026-05-22', end: '2026-08-19', name: 'Summer Vacation' },
-  // First Day of School (Aug 19)
-  { start: '2026-08-19', end: '2026-08-19', name: 'First Day of School' },
+  // Summer Vacation (between last day May 22 and first day Aug 19, weekends excluded in display)
+  { start: '2026-05-23', end: '2026-08-18', name: 'Summer Vacation' },
   // No School Labor Day (Sept 7)
   { start: '2026-09-07', end: '2026-09-07', name: 'No School (Labor)' },
   // Fall Break (Oct 22-26)
@@ -35,6 +31,12 @@ export const HOLIDAYS = [
   // Winter Break (Dec 21-31)
   { start: '2026-12-21', end: '2026-12-31', name: 'Winter Break' },
 ];
+
+// Special school year boundary markers (not holidays, just markers)
+export const SCHOOL_YEAR_DATES = {
+  lastDayOfSchool: '2026-05-22',
+  firstDayOfSchool: '2026-08-19'
+};
 
 // Get all days in a month
 export function getDaysInMonth(year, month) {
@@ -64,6 +66,22 @@ export function isHoliday(dateStr) {
   return HOLIDAYS.some(holiday => {
     return dateStr >= holiday.start && dateStr <= holiday.end;
   });
+}
+
+// Check if a date is a summer holiday (May 23 - Aug 18, excluding weekends)
+export function isSummerHoliday(dateStr) {
+  const { year, month, day } = parseDate(dateStr);
+  // Exclude weekends from holiday borders
+  if (isWeekend(year, month, day)) return false;
+  return dateStr >= '2026-05-23' && dateStr <= '2026-08-18';
+}
+
+// Check if a date is a non-summer holiday (all other holidays, excluding weekends)
+export function isNonSummerHoliday(dateStr) {
+  const { year, month, day } = parseDate(dateStr);
+  // Exclude weekends from holiday borders
+  if (isWeekend(year, month, day)) return false;
+  return isHoliday(dateStr) && !isSummerHoliday(dateStr);
 }
 
 // Check if a date is a weekend (Saturday or Sunday)
@@ -112,7 +130,8 @@ export function getTotalCounts() {
   const totals = {
     schoolDays: 0,
     weekends: 0,
-    holidays: 0
+    summerHolidays: 0,
+    nonSummerHolidays: 0
   };
 
   // Iterate through all days of 2026
@@ -129,10 +148,21 @@ export function getTotalCounts() {
         totals.weekends++;
       }
       
-      if (isHoliday(dateStr)) {
-        totals.holidays++;
+      if (isSummerHoliday(dateStr)) {
+        totals.summerHolidays++;
+      }
+      
+      if (isNonSummerHoliday(dateStr)) {
+        totals.nonSummerHolidays++;
       }
     }
+  }
+
+  // Verify we have exactly 180 school days
+  if (totals.schoolDays !== 180) {
+    console.warn(`⚠️ School day count is ${totals.schoolDays}, expected 180`);
+  } else {
+    console.log(`✅ School day count verified: ${totals.schoolDays} days`);
   }
 
   return totals;
@@ -141,13 +171,14 @@ export function getTotalCounts() {
 // Calculate statistics for assignments
 export function calculateStatistics(assignments) {
   const stats = {
-    mom: { total: 0, schoolDays: 0, weekends: 0, holidays: 0 },
-    dad: { total: 0, schoolDays: 0, weekends: 0, holidays: 0 },
+    mom: { total: 0, schoolDays: 0, weekends: 0, summerHolidays: 0, nonSummerHolidays: 0 },
+    dad: { total: 0, schoolDays: 0, weekends: 0, summerHolidays: 0, nonSummerHolidays: 0 },
     disputed: 0
   };
 
   Object.entries(assignments).forEach(([dateStr, assignment]) => {
-    if (assignment === 'disputed') {
+    // Handle disputed days (disputed-mom-to-dad or disputed-dad-to-mom)
+    if (assignment?.startsWith('disputed-')) {
       stats.disputed++;
       return;
     }
@@ -166,8 +197,12 @@ export function calculateStatistics(assignments) {
       stats[parent].weekends++;
     }
 
-    if (isHoliday(dateStr)) {
-      stats[parent].holidays++;
+    if (isSummerHoliday(dateStr)) {
+      stats[parent].summerHolidays++;
+    }
+
+    if (isNonSummerHoliday(dateStr)) {
+      stats[parent].nonSummerHolidays++;
     }
   });
 

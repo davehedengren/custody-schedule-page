@@ -4,6 +4,7 @@ import path from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { readFileSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,6 +36,52 @@ try {
 
 app.use(cors());
 app.use(express.json());
+
+// Seed initial proposals into the database
+async function seedInitialProposals() {
+  try {
+    // Check if proposals already exist
+    const momKeys = await db.list('mom-');
+    const dadKeys = await db.list('dad-');
+    
+    // Seed mom proposal if it doesn't exist
+    const momKey = 'mom-2025-11-20T00-00-00';
+    if (!momKeys.includes(momKey)) {
+      try {
+        const momData = JSON.parse(readFileSync(path.join(__dirname, 'mom-track-custody-proposal-2025-11-20.json'), 'utf-8'));
+        await db.set(momKey, {
+          year: momData.year,
+          assignments: momData.assignments,
+          savedAt: '2025-11-20T00:00:00.000Z'
+        });
+        console.log('✅ Seeded Mom proposal (2025-11-20)');
+      } catch (e) {
+        console.log('ℹ️  Mom proposal file not found, skipping seed');
+      }
+    }
+    
+    // Seed dad proposal if it doesn't exist
+    const dadKey = 'dad-2025-10-22T00-00-00';
+    if (!dadKeys.includes(dadKey)) {
+      try {
+        const dadData = JSON.parse(readFileSync(path.join(__dirname, 'dad-track-custody-proposal-2025-10-22.json'), 'utf-8'));
+        await db.set(dadKey, {
+          year: dadData.year,
+          assignments: dadData.assignments,
+          savedAt: '2025-10-22T00:00:00.000Z'
+        });
+        console.log('✅ Seeded Dad proposal (2025-10-22)');
+      } catch (e) {
+        console.log('ℹ️  Dad proposal file not found, skipping seed');
+      }
+    }
+  } catch (error) {
+    console.error('⚠️  Error seeding proposals:', error.message);
+  }
+}
+
+// Seed proposals after database is initialized
+seedInitialProposals();
 
 // Serve static files from dist folder in production
 if (isProduction) {

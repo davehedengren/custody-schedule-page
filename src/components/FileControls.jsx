@@ -13,6 +13,7 @@ export default function FileControls({
   const [dadProposals, setDadProposals] = useState([]);
   const [selectedMomProposal, setSelectedMomProposal] = useState('');
   const [selectedDadProposal, setSelectedDadProposal] = useState('');
+  const [lastSelectedMomProposal, setLastSelectedMomProposal] = useState('');
   const [saving, setSaving] = useState(false);
 
   // Load proposals on mount and when mode changes
@@ -43,6 +44,7 @@ export default function FileControls({
     const key = e.target.value;
     setSelectedMomProposal(key);
     if (key) {
+      setLastSelectedMomProposal(key);
       const proposal = await getProposal(key);
       if (proposal) {
         onLoadProposal(proposal.assignments);
@@ -139,9 +141,21 @@ export default function FileControls({
         <div className="comparison-mode">
           <div className="mode-indicator">
             <strong>Comparison Mode Active</strong>
-            <p>Purple days indicate disputes</p>
+            <p>Disputed days show gradient: bottom = Mom's proposal, top = Dad's proposal</p>
           </div>
-          <button onClick={onExitComparison} className="control-btn exit-btn">
+          <button onClick={async () => {
+            // Load the last selected mom proposal
+            if (lastSelectedMomProposal) {
+              const proposal = await getProposal(lastSelectedMomProposal);
+              if (proposal) {
+                onLoadProposal(proposal.assignments);
+              }
+            }
+            // Reset dropdowns
+            setSelectedMomProposal('');
+            setSelectedDadProposal('');
+            onExitComparison();
+          }} className="control-btn exit-btn">
             Exit Comparison
           </button>
         </div>

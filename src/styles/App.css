@@ -231,6 +231,30 @@ body {
   margin: 0;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.instructions-btn {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.instructions-btn:hover {
+  background-color: #2980b9;
+}
+
 /* Mode Toggle */
 .mode-toggle {
   display: flex;
@@ -514,7 +538,16 @@ body {
 }
 
 .disputed-value {
-  color: #9C27B0;
+  color: #e65100;
+  font-weight: bold;
+}
+
+.disputed-hint {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  margin-top: 8px;
+  text-align: center;
 }
 
 /* File Controls */
@@ -778,22 +811,129 @@ body {
   background-color: #0b7dda;
 }
 
-.day-cell.disputed-day {
-  background-color: #9C27B0;
+.day-cell.disputed-mom-to-dad {
+  background: linear-gradient(to top, #4CAF50 50%, #2196F3 50%);
   color: white;
   position: relative;
+  font-weight: bold;
 }
 
-.day-cell.disputed-day:hover {
-  background-color: #7B1FA2;
+.day-cell.disputed-mom-to-dad:hover {
+  background: linear-gradient(to top, #45a049 50%, #0b7dda 50%);
 }
 
-.day-cell.disputed-day::after {
+.day-cell.disputed-dad-to-mom {
+  background: linear-gradient(to top, #2196F3 50%, #4CAF50 50%);
+  color: white;
+  position: relative;
+  font-weight: bold;
+}
+
+.day-cell.disputed-dad-to-mom:hover {
+  background: linear-gradient(to top, #0b7dda 50%, #45a049 50%);
+}
+
+.day-cell.disputed-mom-to-dad::after,
+.day-cell.disputed-dad-to-mom::after {
   content: '⚠';
   position: absolute;
   top: 2px;
   right: 2px;
   font-size: 10px;
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+/* Holiday borders */
+.day-cell.summer-holiday {
+  border: 3px solid gold;
+  box-sizing: border-box;
+}
+
+.day-cell.non-summer-holiday {
+  border: 3px solid #dc3545;
+  box-sizing: border-box;
+}
+
+/* Instructions Page */
+.instructions-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.instructions-content {
+  max-width: 900px;
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.instructions-content h1 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.instructions-link {
+  background-color: #e3f2fd;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.instructions-link a {
+  color: #2196F3;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.instructions-link a:hover {
+  text-decoration: underline;
+}
+
+.instructions-section {
+  margin-bottom: 30px;
+}
+
+.instructions-section h2 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.instructions-section p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.back-to-calendar-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.back-to-calendar-btn:hover {
+  background-color: #45a049;
 }
 
 /* Responsive adjustments */
@@ -812,6 +952,18 @@ body {
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .instructions-content {
+    padding: 20px;
+  }
+
+  .instructions-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .instructions-section h2 {
+    font-size: 1.4rem;
   }
 }
 
