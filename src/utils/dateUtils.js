@@ -162,7 +162,8 @@ export function calculateStatistics(assignments) {
   };
 
   Object.entries(assignments).forEach(([dateStr, assignment]) => {
-    if (assignment === 'disputed') {
+    // Handle disputed days (disputed-mom-to-dad or disputed-dad-to-mom)
+    if (assignment?.startsWith('disputed-')) {
       stats.disputed++;
       return;
     }

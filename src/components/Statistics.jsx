@@ -97,6 +97,7 @@ export default function Statistics({ assignments, comparisonMode }) {
             <span className="stat-label">Disputed Days:</span>
             <span className="stat-value disputed-value">{stats.disputed}</span>
           </div>
+          <p className="disputed-hint">Gradient shows direction: bottom = Mom's proposal, top = Dad's proposal</p>
         </div>
       )}
     </div>

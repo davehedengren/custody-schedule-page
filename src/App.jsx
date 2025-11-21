@@ -52,7 +52,7 @@ function App() {
   };
 
   const handleCompareProposals = (momAssignments, dadAssignments) => {
-    // Create merged assignments with disputed days
+    // Create merged assignments with disputed days showing direction
     const merged = {};
     const allDates = new Set([
       ...Object.keys(momAssignments),
@@ -69,8 +69,8 @@ function App() {
           // Same assignment - no dispute
           merged[dateStr] = momAssignment;
         } else {
-          // Different assignments - disputed
-          merged[dateStr] = 'disputed';
+          // Different assignments - show gradient: mom's proposal on bottom, dad's proposal on top
+          merged[dateStr] = `disputed-${momAssignment}-to-${dadAssignment}`;
         }
       } else if (momAssignment) {
         // Only mom has assignment

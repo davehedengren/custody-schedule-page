@@ -31,8 +31,16 @@ function MonthCalendar({ month, assignments, onDayClick, comparisonMode }) {
       className += ' mom-day';
     } else if (assignment === 'dad') {
       className += ' dad-day';
-    } else if (assignment === 'disputed') {
-      className += ' disputed-day';
+    } else if (assignment?.startsWith('disputed-')) {
+      // Handle gradient disputes: disputed-mom-to-dad or disputed-dad-to-mom
+      if (assignment === 'disputed-mom-to-dad') {
+        className += ' disputed-mom-to-dad';
+      } else if (assignment === 'disputed-dad-to-mom') {
+        className += ' disputed-dad-to-mom';
+      } else if (assignment === 'disputed-mom-to-mom' || assignment === 'disputed-dad-to-dad') {
+        // Same to same (shouldn't happen but handle gracefully)
+        className += assignment === 'disputed-mom-to-mom' ? ' mom-day' : ' dad-day';
+      }
     }
     
     // Add holiday border classes
