@@ -1,5 +1,6 @@
 run = "bash start.sh"
 entrypoint = "server.js"
+modules = ["nodejs-20"]
 
 [nix]
 channel = "stable-23_11"
@@ -12,4 +13,11 @@ deploymentTarget = "cloudrun"
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[[ports]]
+localPort = 5173
+externalPort = 5173
+
+[agent]
+expertMode = true
 
