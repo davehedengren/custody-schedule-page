@@ -1,6 +1,6 @@
 { pkgs }: {
   deps = [
-    pkgs.nodejs-18_x
+    pkgs.nodejs-22_x
   ];
 }
 
