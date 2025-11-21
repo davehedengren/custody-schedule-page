@@ -20,12 +20,8 @@ export const HOLIDAYS = [
   { start: '2026-03-16', end: '2026-03-17', name: 'No School' },
   // Spring Break (Apr 6-10)
   { start: '2026-04-06', end: '2026-04-10', name: 'Spring Break' },
-  // Last Day of School (May 22)
-  { start: '2026-05-22', end: '2026-05-22', name: 'Last Day of School' },
-  // Summer Vacation (May 22 - Aug 19)
-  { start: '2026-05-22', end: '2026-08-19', name: 'Summer Vacation' },
-  // First Day of School (Aug 19)
-  { start: '2026-08-19', end: '2026-08-19', name: 'First Day of School' },
+  // Summer Vacation (between last day May 22 and first day Aug 19, weekends excluded in display)
+  { start: '2026-05-23', end: '2026-08-18', name: 'Summer Vacation' },
   // No School Labor Day (Sept 7)
   { start: '2026-09-07', end: '2026-09-07', name: 'No School (Labor)' },
   // Fall Break (Oct 22-26)
@@ -35,6 +31,12 @@ export const HOLIDAYS = [
   // Winter Break (Dec 21-31)
   { start: '2026-12-21', end: '2026-12-31', name: 'Winter Break' },
 ];
+
+// Special school year boundary markers (not holidays, just markers)
+export const SCHOOL_YEAR_DATES = {
+  lastDayOfSchool: '2026-05-22',
+  firstDayOfSchool: '2026-08-19'
+};
 
 // Get all days in a month
 export function getDaysInMonth(year, month) {
@@ -66,13 +68,19 @@ export function isHoliday(dateStr) {
   });
 }
 
-// Check if a date is a summer holiday (May 22 - Aug 19)
+// Check if a date is a summer holiday (May 23 - Aug 18, excluding weekends)
 export function isSummerHoliday(dateStr) {
-  return dateStr >= '2026-05-22' && dateStr <= '2026-08-19';
+  const { year, month, day } = parseDate(dateStr);
+  // Exclude weekends from holiday borders
+  if (isWeekend(year, month, day)) return false;
+  return dateStr >= '2026-05-23' && dateStr <= '2026-08-18';
 }
 
-// Check if a date is a non-summer holiday (all other holidays)
+// Check if a date is a non-summer holiday (all other holidays, excluding weekends)
 export function isNonSummerHoliday(dateStr) {
+  const { year, month, day } = parseDate(dateStr);
+  // Exclude weekends from holiday borders
+  if (isWeekend(year, month, day)) return false;
   return isHoliday(dateStr) && !isSummerHoliday(dateStr);
 }
 
@@ -148,6 +156,13 @@ export function getTotalCounts() {
         totals.nonSummerHolidays++;
       }
     }
+  }
+
+  // Verify we have exactly 180 school days
+  if (totals.schoolDays !== 180) {
+    console.warn(`⚠️ School day count is ${totals.schoolDays}, expected 180`);
+  } else {
+    console.log(`✅ School day count verified: ${totals.schoolDays} days`);
   }
 
   return totals;
