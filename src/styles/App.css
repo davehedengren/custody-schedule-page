@@ -811,36 +811,53 @@ body {
   background-color: #0b7dda;
 }
 
-.day-cell.disputed-mom-to-dad {
-  background: linear-gradient(to top, #4CAF50 50%, #2196F3 50%);
-  color: white;
+/* Disputed day styles with M/D labels */
+.day-cell.disputed-day {
+  background-color: #fff3e0;
+  border: 2px solid #ff9800;
   position: relative;
-  font-weight: bold;
+  padding: 2px;
 }
 
-.day-cell.disputed-mom-to-dad:hover {
-  background: linear-gradient(to top, #45a049 50%, #0b7dda 50%);
+.day-cell.disputed-day:hover {
+  background-color: #ffe0b2;
+  cursor: help;
 }
 
-.day-cell.disputed-dad-to-mom {
-  background: linear-gradient(to top, #2196F3 50%, #4CAF50 50%);
-  color: white;
-  position: relative;
-  font-weight: bold;
+.disputed-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  gap: 1px;
 }
 
-.day-cell.disputed-dad-to-mom:hover {
-  background: linear-gradient(to top, #0b7dda 50%, #45a049 50%);
-}
-
-.day-cell.disputed-mom-to-dad::after,
-.day-cell.disputed-dad-to-mom::after {
-  content: '⚠';
-  position: absolute;
-  top: 2px;
-  right: 2px;
+.dispute-label {
   font-size: 10px;
-  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+  font-weight: bold;
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1;
+}
+
+.dispute-day-number {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  line-height: 1;
+}
+
+/* Color classes for M/D labels based on what each track proposes */
+.mom-color {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.dad-color {
+  background-color: #2196F3;
+  color: white;
 }
 
 /* Holiday borders */
