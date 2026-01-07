@@ -10,6 +10,25 @@ import {
   isNonSummerHoliday
 } from '../utils/dateUtils';
 
+// Helper to parse disputed assignment and get what each track proposes
+function parseDispute(assignment) {
+  if (!assignment?.startsWith('disputed-')) return null;
+  
+  // Format: disputed-{momProposal}-to-{dadProposal}
+  // e.g., disputed-mom-to-dad means Mom proposes Mom day, Dad proposes Dad day
+  if (assignment === 'disputed-mom-to-dad') {
+    return { momProposal: 'mom', dadProposal: 'dad' };
+  } else if (assignment === 'disputed-dad-to-mom') {
+    return { momProposal: 'dad', dadProposal: 'mom' };
+  }
+  return null;
+}
+
+// Helper to format proposal for display
+function formatProposal(proposal) {
+  return proposal === 'mom' ? 'Mom' : 'Dad';
+}
+
 function MonthCalendar({ month, assignments, onDayClick, comparisonMode }) {
   const daysInMonth = getDaysInMonth(YEAR, month);
   const firstDay = getFirstDayOfMonth(YEAR, month);
@@ -27,20 +46,17 @@ function MonthCalendar({ month, assignments, onDayClick, comparisonMode }) {
     const assignment = assignments[dateStr];
     
     let className = 'day-cell';
+    const dispute = parseDispute(assignment);
+    
     if (assignment === 'mom') {
       className += ' mom-day';
     } else if (assignment === 'dad') {
       className += ' dad-day';
-    } else if (assignment?.startsWith('disputed-')) {
-      // Handle gradient disputes: disputed-mom-to-dad or disputed-dad-to-mom
-      if (assignment === 'disputed-mom-to-dad') {
-        className += ' disputed-mom-to-dad';
-      } else if (assignment === 'disputed-dad-to-mom') {
-        className += ' disputed-dad-to-mom';
-      } else if (assignment === 'disputed-mom-to-mom' || assignment === 'disputed-dad-to-dad') {
-        // Same to same (shouldn't happen but handle gracefully)
-        className += assignment === 'disputed-mom-to-mom' ? ' mom-day' : ' dad-day';
-      }
+    } else if (dispute) {
+      className += ' disputed-day';
+    } else if (assignment === 'disputed-mom-to-mom' || assignment === 'disputed-dad-to-dad') {
+      // Same to same (shouldn't happen but handle gracefully)
+      className += assignment === 'disputed-mom-to-mom' ? ' mom-day' : ' dad-day';
     }
     
     // Add holiday border classes
@@ -50,15 +66,38 @@ function MonthCalendar({ month, assignments, onDayClick, comparisonMode }) {
       className += ' non-summer-holiday';
     }
     
-    days.push(
-      <div
-        key={day}
-        className={className}
-        onClick={() => !comparisonMode && onDayClick(dateStr)}
-      >
-        {day}
-      </div>
-    );
+    // Build tooltip for disputed days
+    const tooltip = dispute 
+      ? `Disagreement: Mom proposes ${formatProposal(dispute.momProposal)} day, Dad proposes ${formatProposal(dispute.dadProposal)} day`
+      : undefined;
+    
+    // Render disputed days with M/D labels
+    if (dispute) {
+      days.push(
+        <div
+          key={day}
+          className={className}
+          onClick={() => !comparisonMode && onDayClick(dateStr)}
+          title={tooltip}
+        >
+          <div className="disputed-content">
+            <span className={`dispute-label mom-label ${dispute.momProposal}-color`}>M</span>
+            <span className="dispute-day-number">{day}</span>
+            <span className={`dispute-label dad-label ${dispute.dadProposal}-color`}>D</span>
+          </div>
+        </div>
+      );
+    } else {
+      days.push(
+        <div
+          key={day}
+          className={className}
+          onClick={() => !comparisonMode && onDayClick(dateStr)}
+        >
+          {day}
+        </div>
+      );
+    }
   }
   
   return (

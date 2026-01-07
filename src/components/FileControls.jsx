@@ -141,7 +141,7 @@ export default function FileControls({
         <div className="comparison-mode">
           <div className="mode-indicator">
             <strong>Comparison Mode Active</strong>
-            <p>Disputed days show gradient: bottom = Mom's proposal, top = Dad's proposal</p>
+            <p>Disputed days show M (Mom's proposal) and D (Dad's proposal) with colors. Hover for details.</p>
           </div>
           <button onClick={async () => {
             // Load the last selected mom proposal

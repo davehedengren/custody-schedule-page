@@ -61,16 +61,16 @@ async function seedInitialProposals() {
     }
     
     // Seed dad proposal if it doesn't exist
-    const dadKey = 'dad-2025-10-22T00-00-00';
+    const dadKey = 'dad-2026-01-07T00-00-00';
     if (!dadKeys.includes(dadKey)) {
       try {
-        const dadData = JSON.parse(readFileSync(path.join(__dirname, 'dad-track-custody-proposal-2025-10-22.json'), 'utf-8'));
+        const dadData = JSON.parse(readFileSync(path.join(__dirname, 'dad-track-custody-proposal-2026-01-07.json'), 'utf-8'));
         await db.set(dadKey, {
           year: dadData.year,
           assignments: dadData.assignments,
-          savedAt: '2025-10-22T00:00:00.000Z'
+          savedAt: '2026-01-07T00:00:00.000Z'
         });
-        console.log('✅ Seeded Dad proposal (2025-10-22)');
+        console.log('✅ Seeded Dad proposal (2026-01-07)');
       } catch (e) {
         console.log('ℹ️  Dad proposal file not found, skipping seed');
       }
