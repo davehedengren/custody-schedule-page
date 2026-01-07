@@ -18,6 +18,34 @@ externalPort = 80
 localPort = 5173
 externalPort = 5173
 
+[[ports]]
+localPort = 5000
+externalPort = 80
+
 [agent]
 expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start App"
+
+[[workflows.workflow]]
+name = "Start App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash start.sh"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
 
